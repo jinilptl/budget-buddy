@@ -1,11 +1,11 @@
 
-
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
 // import routers 
 import { UserRouter } from "./routes/User.routes.js";
+import { TransactionRouter } from "./routes/Transaction.routes.js";
 
 const app = express();
 
@@ -15,6 +15,7 @@ app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(cookieParser());
 
 app.use("/api/v1/users", UserRouter);
+app.use("/api/v1/transaction", TransactionRouter);
 
 
 app.get("/", (req, res) => {

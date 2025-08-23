@@ -1,30 +1,35 @@
 import mongoose from "mongoose";
 
-const transactionSchema = new mongoose.Schema({
-  fromAccount: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true
+const transactionSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // relation with User model
+      required: true,
+    },
+    amount: {
+      type: Number,
+      required: true,
+    },
+    transactionType: {
+      type: String,
+      enum: ["income", "expense"], // Only these 2 allowed
+      required: true,
+    },
+    category: {
+      type: String, // Example: Food, Rent, Salary, Shopping, etc.
+      required: true,
+    },
+    description: {
+      type: String, // Optional note about transaction
+      default: "",
+    },
+    transactionDate: {     // for when user actually made the transaction
+      type: Date,
+      required: true,
+    },
   },
-  toAccount: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true
-  },
-  amount: {
-    type: Number,
-    required: true,
-    min: 1
-  },
-  status: {
-    type: String,
-    enum: ["PENDING", "SUCCESS", "FAILED"],
-    default: "PENDING"
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+  { timestamps: true }
+);
 
 export const Transaction = mongoose.model("Transaction", transactionSchema);

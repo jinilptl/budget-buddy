@@ -60,13 +60,16 @@ export const login = AsyncHandler(async (req, res) => {
 
   // generate JWT
   const token = jwt.sign(
-    { id: user._id },
+    { id: user._id , name: user.name, email: user.email},
     process.env.JWT_SECRET,
-    { expiresIn: "1h" }
+    { expiresIn: "1d" }
   );
+
+
+  const NewFindUser=await UserModel.findById(user._id).select("-password")
 
   return res
     .status(200)
     .cookie("token", token, { httpOnly: true, secure: true })
-    .json(new ApiResponse(200, { token }, "Login successful"));
+    .json(new ApiResponse(200, { token , user:NewFindUser}, "Login successful"));
 });
