@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { HiEye, HiEyeOff } from "react-icons/hi";
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const onNavigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -57,7 +59,7 @@ export default function Login() {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-500">
               Don't have an account?{' '}
-              <button className="text-teal-500 hover:text-teal-600 font-medium">
+              <button className="text-teal-500 hover:text-teal-600 font-medium" onClick={()=>{onNavigate('/register')}}>
                 Sign up here
               </button>
             </p>

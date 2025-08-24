@@ -11,8 +11,8 @@ function App() {
   <>
      <h1>hello ji kese hoo</h1>
      <Routes>
-      <Route path="/" element={<Register/>}/>
-      <Route path="/login" element={<Login/>}/>
+      <Route path="/" element={<Login/>}/>
+      <Route path="/register" element={<Register/>}/>
      </Routes>
   </>
 
