@@ -1,12 +1,12 @@
-import { Children, createContext } from "react";
+import { createContext } from "react";
 
 export const AuthContext = createContext();
 
-const AuthContextProvider = ({ Children }) => {
+const AuthContextProvider = ({ children }) => {
   let Authvalue = {};
 
   return (
-    <AuthContext.Provider value={Authvalue}>{Children}</AuthContext.Provider>
+    <AuthContext.Provider value={Authvalue}>{children}</AuthContext.Provider>
   );
 };
 
