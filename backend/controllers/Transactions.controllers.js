@@ -3,6 +3,8 @@ import { AsyncHandler } from "../utils/AsyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import { User, User as UserModel } from "../models/User.models.js";
 import ApiResponse from "../utils/ApiResponse.js";
+import mongoose from "mongoose";
+
 
 const createTransaction = AsyncHandler(async (req, res) => {
   // take data from body
@@ -61,7 +63,7 @@ const getAllTransactions = AsyncHandler(async (req, res) => {
   if (!userId) {
     throw new ApiError(404, "User not found");
   }
-  let QueryObj = { userid: userId };
+  let QueryObj = { userId: userId };
   if (category) {
     QueryObj.category = category;
   }
@@ -100,7 +102,7 @@ const getTransactionById = AsyncHandler(async (req, res) => {
 
   const { id } = req.params;
 
-  const userId = req.user._id;
+  const userId = req.user.id;
 
   if (!userId) {
     throw new ApiError(400, "user not found, not authorized");
@@ -109,6 +111,9 @@ const getTransactionById = AsyncHandler(async (req, res) => {
   if (!id) {
     throw new ApiError(400, "invalid params, no Transaction id coming");
   }
+
+
+  console.log("is valid id ", mongoose.Types.ObjectId.isValid(id));
 
   const Transaction = await TransactionModel.findOne({
     _id: id,
@@ -133,7 +138,7 @@ const getTransactionById = AsyncHandler(async (req, res) => {
 const updateTransaction = AsyncHandler(async (req, res) => {
   // fetch user id
 
-  const userId = req.user._id;
+  const userId = req.user.id;
 
   //fetch transaction id
 
@@ -151,7 +156,10 @@ const updateTransaction = AsyncHandler(async (req, res) => {
   if (amount <= 0) {
     throw new ApiError(400, "Amount must be greater than 0 ");
   }
-  if (transactionType !== "income" || transactionType !== "expense") {
+
+  console.log("transactionType is", transactionType);
+
+  if (transactionType !== "income" && transactionType !== "expense") {
     throw new ApiError(400, "Transaction type must be income or expense");
   }
 
@@ -184,6 +192,8 @@ const updateTransaction = AsyncHandler(async (req, res) => {
     delete updateFields.transactionDate; // empty string ignore karo
   }
 
+  console.log("updateFields are", updateFields);
+
   const updatedTransaction = await TransactionModel.findOneAndUpdate(
     { _id: id, userId: userId },
     { $set: updateFields },
@@ -191,9 +201,7 @@ const updateTransaction = AsyncHandler(async (req, res) => {
   );
 
   if (!updatedTransaction) {
-    return res
-      .status(404)
-      .json({ success: false, message: "Transaction not found" });
+    throw new ApiError(404, "Transaction not found or not authorized");
   }
 
   return res
@@ -206,6 +214,7 @@ const updateTransaction = AsyncHandler(async (req, res) => {
       )
     );
 });
+
 
 const deleteTransaction = AsyncHandler(async (req, res) => {
   const userId = req.user.id;
@@ -232,7 +241,8 @@ const deleteTransaction = AsyncHandler(async (req, res) => {
 });
 
 const getTransactionSummary = AsyncHandler(async (req, res) => {
-  const userId = req.user._id;
+  const userId = req.user.id;
+  console.log("userId is", userId);
 
   if (!userId) {
     throw new ApiError(400, "User not authorized");
@@ -244,7 +254,8 @@ const getTransactionSummary = AsyncHandler(async (req, res) => {
 
   // Build match query for aggregation
 
-  let matchQuery = { userId: userId };
+  const objectId = new mongoose.Types.ObjectId(userId);
+  let matchQuery = {userId: objectId };
 
   if (startDate && endDate) {
     matchQuery.transactionDate = {
@@ -252,6 +263,10 @@ const getTransactionSummary = AsyncHandler(async (req, res) => {
       $lte: new Date(endDate),
     };
   }
+
+  console.log("match query is ",matchQuery);
+  
+  
 
   // ----- Step 1: Aggregate total income & total expense -----
 
@@ -275,16 +290,23 @@ const getTransactionSummary = AsyncHandler(async (req, res) => {
   let totalIncome = 0;
   let totalExpense = 0;
 
+
+  console.log("totals are", totals);
+
   totals.forEach((item) => {
     if (item._id === "income") {
+      console.log("total income is", item.totalAmount);
       totalIncome = item.totalAmount;
     } else if (item._id === "expense") {
+      console.log("total expense is", item.totalAmount);
       totalExpense = item.totalAmount;
     }
   });
 
   // Calculate balance
+  
   let balance = totalIncome - totalExpense;
+  console.log("balance is", balance);
 
   // ----- Step 2: Aggregate category-wise totals -----
   const categoryWiseData = await TransactionModel.aggregate([
@@ -304,10 +326,11 @@ const getTransactionSummary = AsyncHandler(async (req, res) => {
     return acc;
   }, {});
 
+console.log("category wise data is", categoryWise);
 
   // send response 
 
-  return res.status(201).json(new ApiResponse(200,{
+  return res.status(201).json(new ApiResponse(200, {
     totalIncome,
     totalExpense,
     balance,
