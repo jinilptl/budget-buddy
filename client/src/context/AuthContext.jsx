@@ -1,53 +1,33 @@
 import { createContext, useEffect, useState } from "react";
-
-import axios from "axios";
+import { registerApi } from "../services/authServices";
 
 export const AuthContext = createContext();
 
 const AuthContextProvider = ({ children }) => {
-  const API_URL = "http://localhost:4000/api/v1";
+  const [user, setUser] = useState(null);
 
-  const[user,setUser]=useState('')
+  // for debugging
+  useEffect(() => {
+    if (user) {
+      console.log("✅ User updated:", user);
+    }
+  }, [user]);
 
-  useEffect(()=>{
-  console.log("user has been updated:", user);
-
-  },[user])
-  
-
+  // register user function
   async function registerUser(formData) {
     try {
-      console.log("formdata in the register function", formData);
-      const ApiData = {
-        name: formData.name,
-        password: formData.password,
-        email: formData.email,
-      };
-
-      console.log("apidta is ", ApiData);
-
-      const {data} = await axios.post(`${API_URL}/users/register`, ApiData, {
-        withCredentials: true,
-      });
-
-      // console.log("response from the register api", data.data.user);
-      setUser(data.data.user)
-      console.log('user is in register',data.data.user);
-
+      const response = await registerApi(formData);
+      setUser(response.user); // response structure depends on backend
+      return response; // returning allows component to handle navigation
     } catch (error) {
-      console.error("Error registering user:", error);
+      throw error; // propagate to component
     }
   }
 
-
-  async function loginUser(formdata) {
-   
-  }
-
-  let Authvalue = { registerUser,loginUser };
+  const AuthValue = { user, setUser, registerUser };
 
   return (
-    <AuthContext.Provider value={Authvalue}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={AuthValue}>{children}</AuthContext.Provider>
   );
 };
 
