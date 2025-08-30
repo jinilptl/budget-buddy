@@ -37,8 +37,10 @@ function Register() {
 
     setLoading(true);
     try {
-      await registerUser(formData);
-      navigate("/"); // redirect after success
+      const response=await registerUser(formData);
+      console.log(response);
+      
+      // navigate("/"); // redirect after success
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
     } finally {

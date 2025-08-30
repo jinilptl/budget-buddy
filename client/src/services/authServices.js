@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:4000/api/v1";
+const API_URL = import.meta.env.VITE_BASE_URL;
 
 export async function registerApi(formData) {
   const payload = {
@@ -9,9 +9,9 @@ export async function registerApi(formData) {
     password: formData.password,
   };
 
-  const { data } = await axios.post(`${API_URL}/users/register`, payload, {
+  const response = await axios.post(`${API_URL}/users/register`, payload, {
     withCredentials: true,
   });
 
-  return data.data; // Assuming backend sends { data: { user: ... } }
+  return response; // Assuming backend sends { data: { user: ... } }
 }

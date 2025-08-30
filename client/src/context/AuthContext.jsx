@@ -17,10 +17,9 @@ const AuthContextProvider = ({ children }) => {
   async function registerUser(formData) {
     try {
       const response = await registerApi(formData);
-      setUser(response.user); // response structure depends on backend
-      return response; // returning allows component to handle navigation
+      return response; 
     } catch (error) {
-      throw error; // propagate to component
+      throw error;
     }
   }
 

@@ -27,21 +27,16 @@ export const register = AsyncHandler(async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
-  //token created
-  const token = jwt.sign(
-    { id: user._id, name: user.name, email: user.email },
-    process.env.JWT_SECRET,
-    { expiresIn: "2d" }
-  );
 
   // create user
-  user = await UserModel.create({ name, email, password: hashedPassword });
+ user = await UserModel.create({ name, email, password: hashedPassword });
 
   const userfind = await UserModel.findById(user._id).select("-password");
 
+
   return res
     .status(201)
-    .json(new ApiResponse(201, { user: userfind , token }, "User registered successfully"));
+    .json(new ApiResponse(201, { user: userfind}, "User registered successfully"));
 });
 
 

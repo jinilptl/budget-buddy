@@ -9,7 +9,7 @@ function App() {
 
  return(
   <>
-     <h1>hello ji kese hoo</h1>
+    
      <Routes>
       <Route path="/" element={<Login/>}/>
       <Route path="/register" element={<Register/>}/>
