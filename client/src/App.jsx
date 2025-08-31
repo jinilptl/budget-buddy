@@ -6,6 +6,7 @@ import Register from "./pages/Register"
 import Home from "./pages/Home"
 import ProtectedWrapper from "./pages/ProtectedWrapper"
 import Logout from "./pages/Logout"
+import AddTransaction from "./pages/AddTransaction"
 
 function App() {
  
@@ -25,6 +26,12 @@ function App() {
       <Route path="/logout" element={
          <ProtectedWrapper>
            <Logout/>
+         </ProtectedWrapper>
+      }/>
+
+      <Route path="/add-transaction" element={
+         <ProtectedWrapper>
+           <AddTransaction/>
          </ProtectedWrapper>
       }/>
      </Routes>
