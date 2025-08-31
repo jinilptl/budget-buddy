@@ -4,6 +4,9 @@ import { addTransactionApi } from "../services/Transaction/AddTransactionService
 export const TransactionContext = createContext();
 
 const TransactionContextProvider = ({ children }) => {
+
+
+  
   async function addTransaction(formData) {
     try {
       const response = await addTransactionApi(formData);
@@ -13,7 +16,7 @@ const TransactionContextProvider = ({ children }) => {
     }
   }
 
-  let TransactionValue = {};
+  let TransactionValue = {addTransaction};
 
   return (
     <TransactionContext.Provider value={TransactionValue}>
