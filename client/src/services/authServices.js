@@ -15,3 +15,18 @@ export async function registerApi(formData) {
 
   return response; // Assuming backend sends { data: { user: ... } }
 }
+
+export async function loginApi(formData) {
+  const payload = {
+    email: formData.email,
+    password: formData.password,
+  };
+
+  console.log("inside api calling");
+  
+  const response = await axios.post(`${API_URL}/users/login`, payload, {
+    withCredentials: true,
+  });
+  
+  return response; 
+}

@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { registerApi } from "../services/authServices";
+import { registerApi,loginApi } from "../services/authServices";
 
 export const AuthContext = createContext();
 
@@ -11,6 +11,10 @@ const AuthContextProvider = ({ children }) => {
     if (user) {
       console.log("✅ User updated:", user);
     }
+
+    let token=localStorage.getItem('token')
+    console.log("token is ",token);
+    
   }, [user]);
 
   // register user function
@@ -23,7 +27,18 @@ const AuthContextProvider = ({ children }) => {
     }
   }
 
-  const AuthValue = { user, setUser, registerUser };
+  //login user
+  async function loginUser(formData) {
+    try {
+      const response = await loginApi(formData);
+    
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  const AuthValue = { user, setUser, registerUser,loginUser };
 
   return (
     <AuthContext.Provider value={AuthValue}>{children}</AuthContext.Provider>
