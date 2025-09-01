@@ -15,7 +15,7 @@ export default function AddTransaction() {
     amount: "",
     description: "",
     category: "",
-    transactionType: "",
+    transactionType: "expense",
     transactionDate: "",
   });
 
@@ -61,7 +61,7 @@ export default function AddTransaction() {
 
   const goBack = () => {
     console.log("Navigate back");
-    navigate("/home");
+    navigate("/home/main");
   };
 
   /** ---------- Categories ---------- **/

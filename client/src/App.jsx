@@ -1,46 +1,48 @@
-
-import React from "react"
-import { Routes,Route } from "react-router-dom"
-import Login from "./pages/Login"
-import Register from "./pages/Register"
-import Home from "./pages/Home"
-import ProtectedWrapper from "./pages/ProtectedWrapper"
-import Logout from "./pages/Logout"
-import AddTransaction from "./pages/AddTransaction"
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Home from "./pages/Home";
+import ProtectedWrapper from "./pages/ProtectedWrapper";
+import Logout from "./pages/Logout";
+import AddTransaction from "./pages/AddTransaction";
+import { MainApp } from "./pages/OutletPage";
+import { Dashboard } from "./pages/Dashboard";
 
 function App() {
- 
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/home"
+          element={
+            <ProtectedWrapper>
+              <MainApp />
+            </ProtectedWrapper>
+          }
+        >
+         <Route path="/home/add-transaction" element={<AddTransaction />} />
+         <Route path="/home/main" element={<Dashboard/>} />
+        </Route>
 
- return(
-  <>
-    
-     <Routes>
-      <Route path="/" element={<Login/>}/>
-      <Route path="/register" element={<Register/>}/>
-      <Route path="/home" element={
-         <ProtectedWrapper>
-           <Home/>
-         </ProtectedWrapper>
-      }/>
-
-      <Route path="/logout" element={
-         <ProtectedWrapper>
-           <Logout/>
-         </ProtectedWrapper>
-      }/>
-
-      <Route path="/add-transaction" element={
-         <ProtectedWrapper>
-           <AddTransaction/>
-         </ProtectedWrapper>
-      }/>
-     </Routes>
-  </>
-
- )
+        <Route
+          path="/logout"
+          element={
+            <ProtectedWrapper>
+              <Logout />
+            </ProtectedWrapper>
+          }
+        />
+      </Routes>
+    </>
+  );
 }
 
-export default App
-  
+export default App;
 
-
+// this is a budget overview component only show animated slider..this is a upcoming feature
+{
+  /* <BudgetOverview/> */
+}
