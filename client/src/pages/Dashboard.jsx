@@ -1,104 +1,101 @@
-import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { useContext, useEffect, useState } from "react";
+import { Plus } from "lucide-react";
 import { SummaryCard } from "../components/SummaryCard.jsx";
-import { TransactionForm } from "../components/TransactionForm.jsx";
 import { TransactionList } from "../components/TransactionList.jsx";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { TransactionContext } from "../context/TransactionContext.jsx";
 
 export function Dashboard() {
   const [transactions, setTransactions] = useState([
     {
-      id: '1',
+      id: "1",
       amount: 3000,
-      type: 'income',
-      category: 'Salary',
-      description: 'Monthly salary',
-      date: '2025-01-01'
+      type: "income",
+      category: "Salary",
+      description: "Monthly salary",
+      date: "2025-01-01",
     },
     {
-      id: '2',
+      id: "2",
       amount: 150,
-      type: 'expense',
-      category: 'Food & Dining',
-      description: 'Grocery shopping',
-      date: '2025-01-02'
+      type: "expense",
+      category: "Food & Dining",
+      description: "Grocery shopping",
+      date: "2025-01-02",
     },
     {
-      id: '3',
+      id: "3",
       amount: 50,
-      type: 'expense',
-      category: 'Transportation',
-      description: 'Gas station',
-      date: '2025-01-03'
+      type: "expense",
+      category: "Transportation",
+      description: "Gas station",
+      date: "2025-01-03",
     },
     {
-      id: '4',
+      id: "4",
       amount: 500,
-      type: 'income',
-      category: 'Freelance',
-      description: 'Web design project',
-      date: '2025-01-04'
+      type: "income",
+      category: "Freelance",
+      description: "Web design project",
+      date: "2025-01-04",
     },
     {
-      id: '5',
+      id: "5",
       amount: 80,
-      type: 'expense',
-      category: 'Entertainment',
-      description: 'Movie tickets',
-      date: '2025-01-05'
-    }
+      type: "expense",
+      category: "Entertainment",
+      description: "Movie tickets",
+      date: "2025-01-05",
+    },
   ]);
-  
+
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
 
-  const addTransaction = (newTransaction) => {
-    const transaction = {
-      ...newTransaction,
-      id: Date.now().toString()
-    };
-    setTransactions(prev => [transaction, ...prev]);
-  };
+  const [totalIncome, setTotalIncome] = useState(0);
+  const [totalExpense, setTotalExpense] = useState(0);
+  const [balance, setBalance] = useState(0);
 
-  const editTransaction = (transaction) => {
-    setEditingTransaction(transaction);
-    setIsFormOpen(true);
-  };
+  const { getSummery } = useContext(TransactionContext);
 
-  const updateTransaction = (updatedTransaction) => {
-    if (editingTransaction) {
-      setTransactions(prev => 
-        prev.map(t => 
-          t.id === editingTransaction.id 
-            ? { ...updatedTransaction, id: editingTransaction.id }
-            : t
-        )
-      );
-      setEditingTransaction(null);
+  useEffect(() => {
+    async function fetchSummary() {
+      const response = await getSummery();
+      if (response.status === 201) {
+        console.log(response.data.data);
+        let data = response.data.data;
+        setBalance(data.balance);
+        setTotalIncome(data.totalIncome);
+        setTotalExpense(data.totalExpense);
+      }
     }
-  };
+    fetchSummary();
+  }, []);
 
-  const deleteTransaction = (id) => {
-    if (confirm('Are you sure you want to delete this transaction?')) {
-      setTransactions(prev => prev.filter(t => t.id !== id));
-    }
-  };
+  // const editTransaction = (transaction) => {
+  //   setEditingTransaction(transaction);
+  //   setIsFormOpen(true);
+  // };
 
-  const closeForm = () => {
-    setIsFormOpen(false);
-    setEditingTransaction(null);
-  };
+  // const updateTransaction = (updatedTransaction) => {
+  //   if (editingTransaction) {
+  //     setTransactions((prev) =>
+  //       prev.map((t) =>
+  //         t.id === editingTransaction.id
+  //           ? { ...updatedTransaction, id: editingTransaction.id }
+  //           : t
+  //       )
+  //     );
+  //     setEditingTransaction(null);
+  //   }
+  // };
 
-  // Calculate totals
-  const totalIncome = transactions
-    .filter(t => t.type === 'income')
-    .reduce((sum, t) => sum + t.amount, 0);
-  
-  const totalExpense = transactions
-    .filter(t => t.type === 'expense')
-    .reduce((sum, t) => sum + t.amount, 0);
-  
-  const balance = totalIncome - totalExpense;
+  // const deleteTransaction = (id) => {
+  //   if (confirm("Are you sure you want to delete this transaction?")) {
+  //     setTransactions((prev) => prev.filter((t) => t.id !== id));
+  //   }
+  // };
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -121,17 +118,13 @@ export function Dashboard() {
             amount={totalExpense}
             type="expense"
           />
-          <SummaryCard
-            title="Balance"
-            amount={balance}
-            type="balance"
-          />
+          <SummaryCard title="Balance" amount={balance} type="balance" />
         </div>
 
         {/* Add Transaction Button */}
         <div className="mb-6">
           <Link
-            to={'/home/add-transaction'}
+            to={"/home/add-transaction"}
             className="bg-teal-500  text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-colors inline-flex items-center gap-2 font-medium"
           >
             <Plus className="h-5 w-5" />
@@ -140,18 +133,7 @@ export function Dashboard() {
         </div>
 
         {/* Transaction List */}
-        <TransactionList
-          transactions={transactions}
-          onEditTransaction={editTransaction}
-          onDeleteTransaction={deleteTransaction}
-        />
-
-        {/* Transaction Form Modal */}
-        <TransactionForm
-          isOpen={isFormOpen}
-          onClose={closeForm}
-          onAddTransaction={editingTransaction ? updateTransaction : addTransaction}
-        />
+        <TransactionList transactions={transactions}/>
       </div>
     </div>
   );

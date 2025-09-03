@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import { addTransactionApi } from "../services/Transaction/AddTransactionService";
+import { getSummeryApi } from "../services/Transaction/getSummeryService";
 
 export const TransactionContext = createContext();
 
@@ -16,7 +17,25 @@ const TransactionContextProvider = ({ children }) => {
     }
   }
 
-  let TransactionValue = {addTransaction};
+  async function getSummery() {
+           try {
+            const response= await getSummeryApi()
+             if(response){
+              return response
+             }else{
+              alert("Failed to fetch summary in context")
+             }
+            
+           } catch (error) {
+            throw error
+            
+           }
+    
+  }
+
+
+
+  let TransactionValue = {addTransaction,getSummery};
 
   return (
     <TransactionContext.Provider value={TransactionValue}>

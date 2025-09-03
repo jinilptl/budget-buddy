@@ -13,7 +13,7 @@ const AuthContextProvider = ({ children }) => {
     }
 
     let token=localStorage.getItem('token')
-    console.log("token is ",token);
+
     
   }, [user]);
 

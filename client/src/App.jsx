@@ -23,8 +23,12 @@ function App() {
             </ProtectedWrapper>
           }
         >
-         <Route path="/home/add-transaction" element={<AddTransaction />} />
-         <Route path="/home/main" element={<Dashboard/>} />
+          {/* Default child route when /home is visited */}
+          <Route index element={<Dashboard />} />
+
+          {/* Other child routes */}
+          <Route path="main" element={<Dashboard />} />
+          <Route path="add-transaction" element={<AddTransaction />} />
         </Route>
 
         <Route
