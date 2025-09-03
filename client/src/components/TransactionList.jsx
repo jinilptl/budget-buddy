@@ -1,8 +1,13 @@
 import { Edit, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { TransactionContext } from "../context/TransactionContext";
 
-export function TransactionList({ transactions, onEditTransaction, onDeleteTransaction }) {
+export function TransactionList({ onEditTransaction, onDeleteTransaction }) {
+
+  const { Transactions } = useContext(TransactionContext);
+  console.log("transaction is  ",Transactions);
   
+
   function onEditTransaction(){
 
   }
@@ -47,20 +52,20 @@ export function TransactionList({ transactions, onEditTransaction, onDeleteTrans
             </tr>
           </thead>
           <tbody>
-            {transactions.map((transaction) => (
+            {Transactions.map((transaction) => (
               <tr
-                key={transaction.id}
+                key={transaction._id}
                 className="border-b border-gray-100 hover:bg-gray-50"
               >
                 <td className="py-3 px-2 text-sm text-gray-600">
-                  {formatDate(transaction.date)}
+                  {formatDate(transaction.transactionDate)}
                 </td>
                 <td className="py-3 px-2 text-sm text-gray-900">
                   {transaction.category}
                 </td>
                 <td
                   className={`py-3 px-2 text-sm font-medium ${
-                    transaction.type === "income"
+                    transaction.transactionType === "income"
                       ? "text-green-500"
                       : "text-red-500"
                   }`}
@@ -71,12 +76,12 @@ export function TransactionList({ transactions, onEditTransaction, onDeleteTrans
                 <td className="py-3 px-2">
                   <span
                     className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                      transaction.type === "income"
+                      transaction.transactionType === "income"
                         ? "bg-green-100 text-green-800"
                         : "bg-red-100 text-red-800"
                     }`}
                   >
-                    {transaction.type}
+                    {transaction.transactionType}
                   </span>
                 </td>
                 <td className="py-3 px-2 text-sm text-gray-600 max-w-xs truncate">
@@ -106,9 +111,9 @@ export function TransactionList({ transactions, onEditTransaction, onDeleteTrans
 
       {/* Mobile Card View */}
       <div className="md:hidden space-y-3">
-        {transactions.map((transaction) => (
+        {Transactions.map((transaction) => (
           <div
-            key={transaction.id}
+            key={transaction._id}
             className="border border-gray-200 rounded-lg p-4"
           >
             <div className="flex justify-between items-start mb-2">
@@ -117,7 +122,7 @@ export function TransactionList({ transactions, onEditTransaction, onDeleteTrans
                   {transaction.category}
                 </p>
                 <p className="text-sm text-gray-500">
-                  {formatDate(transaction.date)}
+                  {formatDate(transaction.transactionDate)}
                 </p>
               </div>
               <div className="flex space-x-2">
@@ -128,7 +133,7 @@ export function TransactionList({ transactions, onEditTransaction, onDeleteTrans
                   <Edit className="h-4 w-4" />
                 </button>
                 <button
-                  onClick={() => onDeleteTransaction(transaction.id)}
+                  onClick={() => onDeleteTransaction(transaction._id)}
                   className="p-2 text-gray-400 hover:text-red-600 transition-colors"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -139,22 +144,22 @@ export function TransactionList({ transactions, onEditTransaction, onDeleteTrans
             <div className="flex justify-between items-center">
               <span
                 className={`text-lg font-medium ${
-                  transaction.type === "income"
+                  transaction.transactionDate === "income"
                     ? "text-green-500"
                     : "text-red-500"
                 }`}
               >
-                {transaction.type === "expense" ? "-" : "+"}
+                {transaction.transactionDate === "expense" ? "-" : "+"}
                 {formatAmount(transaction.amount)}
               </span>
               <span
                 className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                  transaction.type === "income"
+                  transaction.transactionType === "income"
                     ? "bg-green-100 text-green-800"
                     : "bg-red-100 text-red-800"
                 }`}
               >
-                {transaction.type}
+                {transaction.transactionType}
               </span>
             </div>
 
@@ -167,7 +172,7 @@ export function TransactionList({ transactions, onEditTransaction, onDeleteTrans
         ))}
       </div>
 
-      {transactions.length === 0 && (
+      {Transactions.length === 0 && (
         <div className="text-center py-8">
           <p className="text-gray-500">No transactions found</p>
         </div>

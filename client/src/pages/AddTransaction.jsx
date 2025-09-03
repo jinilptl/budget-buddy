@@ -2,9 +2,10 @@ import React, { useContext, useState } from "react";
 import ShowSuccess from "../components/ShowSuccess";
 import { useNavigate } from "react-router-dom";
 import { TransactionContext } from "../context/TransactionContext";
+import axios from "axios";
 
 export default function AddTransaction() {
-  const { addTransaction } = useContext(TransactionContext);
+  const { addTransaction, setTransactions } = useContext(TransactionContext);
 
   const [isIncome, setIsIncome] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -48,13 +49,23 @@ export default function AddTransaction() {
     const response = await addTransaction(formData);
     console.log("Response:", response);
 
-    if (response.status === 201) handleSuccess();
+    if (response.status === 201){
+      setTransactions((prev)=>{
+        return [response.data.data,...prev]
+      });
+      handleSuccess();
+      
+    } 
   };
 
-  const handleSuccess = () => {
+  
+
+  const handleSuccess = async () => {
     setShowSuccess(true);
+    
     setTimeout(() => {
       setShowSuccess(false);
+
       goBack();
     }, 2000);
   };
