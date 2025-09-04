@@ -1,4 +1,4 @@
-const ShowSuccess = ({ isIncome }) => {
+const ShowSuccess = ({ isIncome,isEdit }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
       <div className="bg-white rounded-xl shadow-lg p-6 text-center">
@@ -17,7 +17,9 @@ const ShowSuccess = ({ isIncome }) => {
             />
           </svg>
         </div>
-        <h3 className="text-xl font-bold text-gray-800 mb-2">Transaction Added!</h3>
+        <h3 className="text-xl font-bold text-gray-800 mb-2">
+          Transaction {isEdit ? "Updated" : "Added"}!
+        </h3>
         <p className="text-gray-600">
           Your {isIncome ? "income" : "expense"} has been recorded successfully
         </p>

@@ -28,7 +28,8 @@ function App() {
 
           {/* Other child routes */}
           <Route path="main" element={<Dashboard />} />
-          <Route path="add-transaction" element={<AddTransaction />} />
+          <Route path="add-transaction" element={<AddTransaction isEdit={false} />} />
+          <Route path="edit-transaction/:id" element={<AddTransaction isEdit={true}/>} />
         </Route>
 
         <Route

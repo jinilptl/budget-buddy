@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import { addTransactionApi } from "../services/Transaction/AddTransactionService";
 import { getSummeryApi } from "../services/Transaction/getSummeryService";
 import { getAllTransactionsApi } from "../services/Transaction/getAllTransactionsService";
+import { updateTransactionApi } from "../services/Transaction/updateTransactionApiService";
 
 export const TransactionContext = createContext();
 
@@ -21,23 +22,37 @@ const TransactionContextProvider = ({ children }) => {
     }
   }
 
+  const token = localStorage.getItem('token');
   useEffect(() => {
     async function fetchTransactions() {
       const response = await getAllTransactions();
       if (response.status === 201) {
         let data = response.data.data;
-        console.log(data);
-
         setTransactions(data.allTransactions);
       }
     }
-
+   if(!token){
+    alert("Please login to continue");
+    return
+   }
     fetchTransactions();
   }, []);
 
   async function addTransaction(formData) {
     try {
       const response = await addTransactionApi(formData);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async function updateTransaction(formData) {
+    try {
+      const response = await updateTransactionApi(formData);
+      console.log("response in context of editing ",response);
+      
       return response;
     } catch (error) {
       throw error;
@@ -57,7 +72,7 @@ const TransactionContextProvider = ({ children }) => {
     }
   }
 
-  let TransactionValue = { addTransaction, getSummery, Transactions ,setTransactions};
+  let TransactionValue = { addTransaction, getSummery, Transactions ,setTransactions,updateTransaction};
 
   return (
     <TransactionContext.Provider value={TransactionValue}>

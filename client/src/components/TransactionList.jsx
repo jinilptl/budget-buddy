@@ -1,12 +1,14 @@
 import { Edit, Trash2 } from "lucide-react";
 import { useContext, useState } from "react";
 import { TransactionContext } from "../context/TransactionContext";
+import { useNavigate } from "react-router-dom";
 
-export function TransactionList({ onEditTransaction, onDeleteTransaction }) {
+export function TransactionList({onDeleteTransaction }) {
 
   const { Transactions } = useContext(TransactionContext);
   console.log("transaction is  ",Transactions);
   
+  const navigate=useNavigate()
 
   function onEditTransaction(){
 
@@ -70,7 +72,7 @@ export function TransactionList({ onEditTransaction, onDeleteTransaction }) {
                       : "text-red-500"
                   }`}
                 >
-                  {transaction.type === "expense" ? "-" : "+"}
+                  {transaction.transactionType === "expense" ? "-" : "+"}
                   {formatAmount(transaction.amount)}
                 </td>
                 <td className="py-3 px-2">
@@ -90,7 +92,7 @@ export function TransactionList({ onEditTransaction, onDeleteTransaction }) {
                 <td className="py-3 px-2 text-right">
                   <div className="flex justify-end space-x-2">
                     <button
-                      onClick={() => onEditTransaction(transaction)}
+                      onClick={() =>navigate(`/home/edit-transaction/${transaction._id}`)}
                       className="p-1 text-gray-400 hover:text-teal-600 transition-colors"
                     >
                       <Edit className="h-4 w-4" />
@@ -127,7 +129,7 @@ export function TransactionList({ onEditTransaction, onDeleteTransaction }) {
               </div>
               <div className="flex space-x-2">
                 <button
-                  onClick={() => onEditTransaction(transaction)}
+                  onClick={() => navigate(`/home/edit-transaction/${transaction._id}`)}
                   className="p-2 text-gray-400 hover:text-teal-600 transition-colors"
                 >
                   <Edit className="h-4 w-4" />
