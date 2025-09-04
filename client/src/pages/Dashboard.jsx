@@ -6,48 +6,7 @@ import { Link } from "react-router-dom";
 import { TransactionContext } from "../context/TransactionContext.jsx";
 
 export function Dashboard() {
-  const [transactions, setTransactions] = useState([
-    {
-      id: "1",
-      amount: 3000,
-      type: "income",
-      category: "Salary",
-      description: "Monthly salary",
-      date: "2025-01-01",
-    },
-    {
-      id: "2",
-      amount: 150,
-      type: "expense",
-      category: "Food & Dining",
-      description: "Grocery shopping",
-      date: "2025-01-02",
-    },
-    {
-      id: "3",
-      amount: 50,
-      type: "expense",
-      category: "Transportation",
-      description: "Gas station",
-      date: "2025-01-03",
-    },
-    {
-      id: "4",
-      amount: 500,
-      type: "income",
-      category: "Freelance",
-      description: "Web design project",
-      date: "2025-01-04",
-    },
-    {
-      id: "5",
-      amount: 80,
-      type: "expense",
-      category: "Entertainment",
-      description: "Movie tickets",
-      date: "2025-01-05",
-    },
-  ]);
+
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
@@ -56,7 +15,8 @@ export function Dashboard() {
   const [totalExpense, setTotalExpense] = useState(0);
   const [balance, setBalance] = useState(0);
 
-  const { getSummery } = useContext(TransactionContext);
+
+  const { Transactions, deleteTransaction, setTransactions, getSummery } = useContext(TransactionContext);
 
   useEffect(() => {
     async function fetchSummary() {
@@ -70,32 +30,26 @@ export function Dashboard() {
       }
     }
     fetchSummary();
-  }, []);
+  }, [deleteTransactionApiCall]);
 
-  // const editTransaction = (transaction) => {
-  //   setEditingTransaction(transaction);
-  //   setIsFormOpen(true);
-  // };
+ async function deleteTransactionApiCall(id) {
+    if (!id) return;
 
-  // const updateTransaction = (updatedTransaction) => {
-  //   if (editingTransaction) {
-  //     setTransactions((prev) =>
-  //       prev.map((t) =>
-  //         t.id === editingTransaction.id
-  //           ? { ...updatedTransaction, id: editingTransaction.id }
-  //           : t
-  //       )
-  //     );
-  //     setEditingTransaction(null);
-  //   }
-  // };
+    if (confirm("Are you sure you want to delete this transaction?")) {
+      console.log("Transaction deleted:", id);
 
-  // const deleteTransaction = (id) => {
-  //   if (confirm("Are you sure you want to delete this transaction?")) {
-  //     setTransactions((prev) => prev.filter((t) => t.id !== id));
-  //   }
-  // };
+        const response = await deleteTransaction(id);
+        console.log("response after deleting transaction ", response);
 
+        if (response.status === 200) {
+          setTransactions((prev) => {
+            return prev.filter((transaction) => transaction._id !== id);
+          });
+        }
+    } else {
+      return;
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -133,7 +87,7 @@ export function Dashboard() {
         </div>
 
         {/* Transaction List */}
-        <TransactionList transactions={transactions}/>
+        <TransactionList deleteTransactionApiCall={deleteTransactionApiCall} />
       </div>
     </div>
   );

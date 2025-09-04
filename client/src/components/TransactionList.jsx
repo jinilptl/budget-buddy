@@ -3,22 +3,16 @@ import { useContext, useState } from "react";
 import { TransactionContext } from "../context/TransactionContext";
 import { useNavigate } from "react-router-dom";
 
-export function TransactionList({onDeleteTransaction }) {
+export function TransactionList({deleteTransactionApiCall}) {
+  const { Transactions, deleteTransaction ,setTransactions,getSummery} = useContext(TransactionContext);
+  console.log("transaction is  ", Transactions);
 
-  const { Transactions } = useContext(TransactionContext);
-  console.log("transaction is  ",Transactions);
-  
-  const navigate=useNavigate()
-
-  function onEditTransaction(){
-
-  }
-        function onDeleteTransaction(){
-
-        }
+  const navigate = useNavigate();
 
   
+
   
+
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -37,7 +31,9 @@ export function TransactionList({onDeleteTransaction }) {
   return (
     <div className="bg-white rounded-lg shadow-md p-4">
       <div className="mb-4">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Recent Transactions</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">
+          Recent Transactions
+        </h2>
       </div>
 
       {/* Desktop Table View */}
@@ -45,12 +41,24 @@ export function TransactionList({onDeleteTransaction }) {
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-200">
-              <th className="text-left py-3 px-2 font-medium text-gray-700">Date</th>
-              <th className="text-left py-3 px-2 font-medium text-gray-700">Category</th>
-              <th className="text-left py-3 px-2 font-medium text-gray-700">Amount</th>
-              <th className="text-left py-3 px-2 font-medium text-gray-700">Type</th>
-              <th className="text-left py-3 px-2 font-medium text-gray-700">Description</th>
-              <th className="text-right py-3 px-2 font-medium text-gray-700">Actions</th>
+              <th className="text-left py-3 px-2 font-medium text-gray-700">
+                Date
+              </th>
+              <th className="text-left py-3 px-2 font-medium text-gray-700">
+                Category
+              </th>
+              <th className="text-left py-3 px-2 font-medium text-gray-700">
+                Amount
+              </th>
+              <th className="text-left py-3 px-2 font-medium text-gray-700">
+                Type
+              </th>
+              <th className="text-left py-3 px-2 font-medium text-gray-700">
+                Description
+              </th>
+              <th className="text-right py-3 px-2 font-medium text-gray-700">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -92,13 +100,15 @@ export function TransactionList({onDeleteTransaction }) {
                 <td className="py-3 px-2 text-right">
                   <div className="flex justify-end space-x-2">
                     <button
-                      onClick={() =>navigate(`/home/edit-transaction/${transaction._id}`)}
+                      onClick={() =>
+                        navigate(`/home/edit-transaction/${transaction._id}`)
+                      }
                       className="p-1 text-gray-400 hover:text-teal-600 transition-colors"
                     >
                       <Edit className="h-4 w-4" />
                     </button>
                     <button
-                      onClick={() => onDeleteTransaction(transaction.id)}
+                      onClick={() => deleteTransactionApiCall(transaction._id)}
                       className="p-1 text-gray-400 hover:text-red-600 transition-colors"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -129,13 +139,15 @@ export function TransactionList({onDeleteTransaction }) {
               </div>
               <div className="flex space-x-2">
                 <button
-                  onClick={() => navigate(`/home/edit-transaction/${transaction._id}`)}
+                  onClick={() =>
+                    navigate(`/home/edit-transaction/${transaction._id}`)
+                  }
                   className="p-2 text-gray-400 hover:text-teal-600 transition-colors"
                 >
                   <Edit className="h-4 w-4" />
                 </button>
                 <button
-                  onClick={() => onDeleteTransaction(transaction._id)}
+                  onClick={() => deleteTransactionApiCall(transaction._id)}
                   className="p-2 text-gray-400 hover:text-red-600 transition-colors"
                 >
                   <Trash2 className="h-4 w-4" />

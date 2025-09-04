@@ -3,6 +3,7 @@ import { addTransactionApi } from "../services/Transaction/AddTransactionService
 import { getSummeryApi } from "../services/Transaction/getSummeryService";
 import { getAllTransactionsApi } from "../services/Transaction/getAllTransactionsService";
 import { updateTransactionApi } from "../services/Transaction/updateTransactionApiService";
+import { deleteTransactionApi } from "../services/Transaction/deleteTransactionService";
 
 export const TransactionContext = createContext();
 
@@ -59,6 +60,17 @@ const TransactionContextProvider = ({ children }) => {
     }
   }
 
+  async function deleteTransaction(id) {
+    try {
+      const response = await deleteTransactionApi(id);
+      console.log("response in context of deleting ",response);
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async function getSummery() {
     try {
       const response = await getSummeryApi();
@@ -72,7 +84,7 @@ const TransactionContextProvider = ({ children }) => {
     }
   }
 
-  let TransactionValue = { addTransaction, getSummery, Transactions ,setTransactions,updateTransaction};
+  let TransactionValue = { addTransaction, getSummery, Transactions ,setTransactions,updateTransaction,deleteTransaction};
 
   return (
     <TransactionContext.Provider value={TransactionValue}>
