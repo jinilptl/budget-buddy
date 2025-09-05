@@ -37,6 +37,9 @@ const TransactionContextProvider = ({ children }) => {
     return
    }
     fetchTransactions();
+
+    
+    
   }, []);
 
   async function addTransaction(formData) {
@@ -47,7 +50,7 @@ const TransactionContextProvider = ({ children }) => {
       throw error;
     }
   }
-
+console.log("all transactions in context ", Transactions);
 
   async function updateTransaction(formData) {
     try {

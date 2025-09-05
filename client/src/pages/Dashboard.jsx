@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { SummaryCard } from "../components/SummaryCard.jsx";
 import { TransactionList } from "../components/TransactionList.jsx";
@@ -6,46 +6,51 @@ import { Link } from "react-router-dom";
 import { TransactionContext } from "../context/TransactionContext.jsx";
 
 export function Dashboard() {
-
-
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingTransaction, setEditingTransaction] = useState(null);
-
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
   const [balance, setBalance] = useState(0);
 
+  const { Transactions, deleteTransaction, setTransactions, getSummery } =
+    useContext(TransactionContext);
 
-  const { Transactions, deleteTransaction, setTransactions, getSummery } = useContext(TransactionContext);
+  //last 24 hours trancation calculated
+  const now = new Date();
+  const last24Hours = useMemo(() => {
+    return Transactions.filter((txn) => {
+      const txnDate = new Date(txn.createdAt);
+      return now - txnDate <= 24 * 60 * 60 * 1000;
+    });
+  }, [Transactions]);
+
+  async function fetchSummary() {
+    const response = await getSummery();
+    if (response.status === 201) {
+      console.log(response.data.data);
+      let data = response.data.data;
+      setBalance(data.balance);
+      setTotalIncome(data.totalIncome);
+      setTotalExpense(data.totalExpense);
+    }
+  }
 
   useEffect(() => {
-    async function fetchSummary() {
-      const response = await getSummery();
-      if (response.status === 201) {
-        console.log(response.data.data);
-        let data = response.data.data;
-        setBalance(data.balance);
-        setTotalIncome(data.totalIncome);
-        setTotalExpense(data.totalExpense);
-      }
-    }
     fetchSummary();
   }, [deleteTransactionApiCall]);
 
- async function deleteTransactionApiCall(id) {
+  async function deleteTransactionApiCall(id) {
     if (!id) return;
 
     if (confirm("Are you sure you want to delete this transaction?")) {
       console.log("Transaction deleted:", id);
 
-        const response = await deleteTransaction(id);
-        console.log("response after deleting transaction ", response);
+      const response = await deleteTransaction(id);
+      console.log("response after deleting transaction ", response);
 
-        if (response.status === 200) {
-          setTransactions((prev) => {
-            return prev.filter((transaction) => transaction._id !== id);
-          });
-        }
+      if (response.status === 200) {
+        setTransactions((prev) => {
+          return prev.filter((transaction) => transaction._id !== id);
+        });
+      }
     } else {
       return;
     }
@@ -87,7 +92,10 @@ export function Dashboard() {
         </div>
 
         {/* Transaction List */}
-        <TransactionList deleteTransactionApiCall={deleteTransactionApiCall} />
+        <TransactionList
+          deleteTransactionApiCall={deleteTransactionApiCall}
+          Transactions={last24Hours}
+        />
       </div>
     </div>
   );

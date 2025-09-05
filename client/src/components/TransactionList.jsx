@@ -3,15 +3,11 @@ import { useContext, useState } from "react";
 import { TransactionContext } from "../context/TransactionContext";
 import { useNavigate } from "react-router-dom";
 
-export function TransactionList({deleteTransactionApiCall}) {
-  const { Transactions, deleteTransaction ,setTransactions,getSummery} = useContext(TransactionContext);
-  console.log("transaction is  ", Transactions);
-
+export function TransactionList({ deleteTransactionApiCall,transactions=[] }) {
+  let Transactions=transactions
+  console.log("transaction is in the transaction list  ", Transactions);
+  
   const navigate = useNavigate();
-
-  
-
-  
 
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("en-US", {
