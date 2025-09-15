@@ -9,6 +9,7 @@ import AddTransaction from "./pages/AddTransaction";
 import { MainApp } from "./pages/OutletPage";
 import { Dashboard } from "./pages/Dashboard";
 import History from "./pages/History";
+import Analytics from "./pages/Analytics/Analytics";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="add-transaction" element={<AddTransaction isEdit={false} />} />
           <Route path="edit-transaction/:id" element={<AddTransaction isEdit={true}/>} />
           <Route path="history" element={<History/>} />
+          {/* <Route path="analytics" element={<Analytics/>} /> */}
         </Route>
 
         <Route
@@ -42,6 +44,8 @@ function App() {
             </ProtectedWrapper>
           }
         />
+
+        <Route path="*" element={<div className="flex items-center justify-center h-screen text-2xl">404 - Page Not Found</div>} />
       </Routes>
     </>
   );

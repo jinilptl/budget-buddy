@@ -53,7 +53,7 @@ export function MainApp() {
           </Link>
 
           {/* Analytics */}
-          <Link  className="flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-50">
+          <Link to={"/home/analytics"} className="flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-50">
             <BarChart3 className="w-5 h-5 lg:w-6 lg:h-6" />
             <span className="text-xs lg:text-sm font-medium">Analytics</span>
           </Link>
