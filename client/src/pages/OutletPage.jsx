@@ -1,6 +1,8 @@
 import React from 'react';
 import { Home, History, Plus, BarChart3, User, Bell } from 'lucide-react';
 import { Link, Outlet } from 'react-router-dom';
+import NavbarLogo from '../components/logo/Navbaarlogo';
+import MainLogo from '../components/logo/MainLogo';
 
 export function MainApp() {
 
@@ -8,20 +10,21 @@ export function MainApp() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col relative">
       {/* Top Header */}
-      <header className="bg-white fixed top-0 left-0 right-0 z-50 shadow-sm border-b px-4 lg:px-6 py-3 flex items-center justify-around">
-        <div className="flex items-center space-x-3">
-          <div className="bg-gradient-to-r from-green-500 to-blue-500 rounded-lg p-2">
-            <div className="w-6 h-6 bg-white rounded opacity-90"></div>
-          </div>
-          <h1 className="text-xl font-bold text-gray-800 hidden sm:block">Budget Buddy</h1>
-        </div>
+      <header className="bg-white fixed top-0 left-0 right-0 z-50 shadow-sm border-b px-4 lg:px-6 py-6 flex items-center justify-around">
+       
+        <MainLogo size="small"/>
+
+
+
+
+
         <button className="p-2 rounded-lg hover:bg-gray-100">
           <Bell className="w-5 h-5 text-gray-600" />
         </button>
       </header>
 
       {/* Main Content (Static placeholder for now) */}
-      <main className="flex-1 overflow-y-auto pb-20 pt-10">
+      <main className="flex-1 overflow-y-auto pb-20 mt-16">
         <div className="max-w-4xl mx-auto p-6">
             <Outlet/>
           

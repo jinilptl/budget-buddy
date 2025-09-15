@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { Mail, Lock, Eye, EyeOff, PiggyBank } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import IconOnly from "../components/logo/IconOnly";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -48,9 +49,11 @@ export default function Login() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <div className="bg-gradient-to-r from-green-500 to-blue-500 rounded-full p-3">
+            {/* <div className="bg-gradient-to-r from-green-500 to-blue-500 rounded-full p-3">
               <PiggyBank className="w-8 h-8 text-white" />
-            </div>
+              
+            </div> */}
+            <IconOnly size="small"/>
           </div>
           <h1 className="text-2xl font-bold text-gray-800 mb-2">
             Welcome Back!
