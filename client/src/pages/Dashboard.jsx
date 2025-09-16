@@ -1,60 +1,79 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { SummaryCard } from "../components/SummaryCard.jsx";
 import { TransactionList } from "../components/TransactionList.jsx";
 import { Link } from "react-router-dom";
 import { TransactionContext } from "../context/TransactionContext.jsx";
+import axios from "axios";
 
 export function Dashboard() {
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
   const [balance, setBalance] = useState(0);
+  const [latestTransactions, setLatestTransactions] = useState([]);
 
-  const { Transactions, deleteTransaction, setTransactions, getSummery } =
+  const { deleteTransaction, setTransactions, getSummery,Transactions } =
     useContext(TransactionContext);
 
-  //last 24 hours trancation calculated
-  const now = new Date();
-  const last24Hours = useMemo(() => {
-    return Transactions.filter((txn) => {
-      const txnDate = new Date(txn.createdAt);
-      return now - txnDate <= 24 * 60 * 60 * 1000;
-    });
-  }, [Transactions]);
+  // ✅ Fetch latest 24h transactions
+  async function fetchLatestTransactions() {
+    const backendUrl = import.meta.env.VITE_BASE_URL;
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
+    try {
+      const res = await axios.get(`${backendUrl}/transaction/latest`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      });
+
+      if (res.status === 201) {
+        setLatestTransactions(res.data.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching latest transactions", error);
+    }
+  }
+
+  // ✅ Fetch summary
   async function fetchSummary() {
-    const response = await getSummery();
-    if (response.status === 201) {
-      console.log(response.data.data);
-      let data = response.data.data;
-      setBalance(data.balance);
-      setTotalIncome(data.totalIncome);
-      setTotalExpense(data.totalExpense);
+    try {
+      const res = await getSummery();
+      if (res.status === 201) {
+        const data = res.data.data;
+        setBalance(data.balance);
+        setTotalIncome(data.totalIncome);
+        setTotalExpense(data.totalExpense);
+      }
+    } catch (error) {
+      console.error("Error fetching summary", error);
+    }
+  }
+
+  // ✅ Delete Transaction
+  async function handleDeleteTransaction(id) {
+    if (!id) return;
+
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this transaction?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const res = await deleteTransaction(id);
+      if (res.status === 200) {
+        setTransactions((prev) => prev.filter((tx) => tx._id !== id));
+        fetchLatestTransactions(); // refresh
+      }
+    } catch (error) {
+      console.error("Error deleting transaction", error);
     }
   }
 
   useEffect(() => {
     fetchSummary();
-  }, [deleteTransactionApiCall]);
-
-  async function deleteTransactionApiCall(id) {
-    if (!id) return;
-
-    if (confirm("Are you sure you want to delete this transaction?")) {
-      console.log("Transaction deleted:", id);
-
-      const response = await deleteTransaction(id);
-      console.log("response after deleting transaction ", response);
-
-      if (response.status === 200) {
-        setTransactions((prev) => {
-          return prev.filter((transaction) => transaction._id !== id);
-        });
-      }
-    } else {
-      return;
-    }
-  }
+    fetchLatestTransactions();
+  }, [Transactions]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -83,18 +102,18 @@ export function Dashboard() {
         {/* Add Transaction Button */}
         <div className="mb-6">
           <Link
-            to={"/home/add-transaction"}
-            className="bg-teal-500  text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-colors inline-flex items-center gap-2 font-medium"
+            to="/home/add-transaction"
+            className="bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-colors inline-flex items-center gap-2 font-medium"
           >
             <Plus className="h-5 w-5" />
             Add Transaction
           </Link>
         </div>
 
-        {/* Transaction List */}
+        {/* ✅ Transaction List */}
         <TransactionList
-          deleteTransactionApiCall={deleteTransactionApiCall}
-          Transactions={last24Hours}
+          transactions={latestTransactions}
+          onDeleteTransaction={handleDeleteTransaction}
         />
       </div>
     </div>
