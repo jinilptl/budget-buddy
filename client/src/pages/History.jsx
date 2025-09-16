@@ -22,7 +22,7 @@ const months = [
 ];
 
 const History = () => {
-  const { Transactions } = useContext(TransactionContext);
+  const { Transactions ,setTransactions,deleteTransaction} = useContext(TransactionContext);
   const transactions = Transactions || [];
 
   const [selectedMonth, setSelectedMonth] = useState("");
@@ -232,6 +232,28 @@ const History = () => {
     pdfMake.createPdf(docDefinition).download("transactions.pdf");
   };
 
+
+
+  async function handleDeleteTransaction(id) {
+    if (!id) return;
+
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this transaction?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const res = await deleteTransaction(id);
+      if (res.status === 200) {
+        setTransactions((prev) => prev.filter((tx) => tx._id !== id));
+        // fetchLatestTransactions(); // refresh
+      }
+    } catch (error) {
+      console.error("Error deleting transaction", error);
+    }
+  }
+
+
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Transaction History</h1>
@@ -308,7 +330,7 @@ const History = () => {
 </div>
 
 
-      <TransactionList transactions={filteredData} />
+      <TransactionList transactions={filteredData} onDeleteTransaction={handleDeleteTransaction} history={true} />
     </div>
   );
 };

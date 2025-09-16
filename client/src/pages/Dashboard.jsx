@@ -114,6 +114,7 @@ export function Dashboard() {
         <TransactionList
           transactions={latestTransactions}
           onDeleteTransaction={handleDeleteTransaction}
+          history={false}
         />
       </div>
     </div>

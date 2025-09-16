@@ -16,7 +16,7 @@ function formatDate(dateString) {
   });
 }
 
-export function TransactionList({ transactions = [], onDeleteTransaction }) {
+export function TransactionList({ transactions = [], onDeleteTransaction, history = false }) {
   const navigate = useNavigate();
 console.log("Transactions in TransactionList:", transactions);
 
@@ -31,7 +31,7 @@ console.log("Transactions in TransactionList:", transactions);
   return (
     <div className="bg-white rounded-lg shadow-md p-4">
       <h2 className="text-xl font-bold text-gray-900 mb-4">
-        Recent Transactions
+        {history ? "Transaction History" : "Recent Transactions"}
       </h2>
 
       {/* Desktop Table View */}
