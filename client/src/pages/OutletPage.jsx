@@ -1,59 +1,63 @@
-import React from 'react';
-import { Home, History, Plus, BarChart3, User, Bell } from 'lucide-react';
-import { Link, Outlet } from 'react-router-dom';
-import NavbarLogo from '../components/logo/Navbaarlogo';
-import MainLogo from '../components/logo/MainLogo';
+import React from "react";
+import { Home, History, Plus, BarChart3, User, Bell } from "lucide-react";
+import { Link, Outlet } from "react-router-dom";
+import NavbarLogo from "../components/logo/Navbaarlogo";
+import MainLogo from "../components/logo/MainLogo";
+import Avatar from "../components/Avatar";
 
 export function MainApp() {
-
-  
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col relative">
       {/* Top Header */}
-      <header className="bg-white fixed top-0 left-0 right-0 z-50 shadow-sm border-b px-4 lg:px-6 py-6 flex items-center justify-around">
-       
-        <MainLogo size="small"/>
-
-
-
-
+      <header className="bg-white fixed top-0 left-0 right-0 z-50 shadow-sm border-b px-4 lg:px-6 py-4 flex items-center justify-around">
+        <MainLogo size="small" ballSize="small" />
 
         <button className="p-2 rounded-lg hover:bg-gray-100">
-          <Bell className="w-5 h-5 text-gray-600" />
+          <Avatar />
         </button>
       </header>
 
       {/* Main Content (Static placeholder for now) */}
       <main className="flex-1 overflow-y-auto pb-20 mt-16">
         <div className="max-w-4xl mx-auto p-6">
-            <Outlet/>
-          
+          <Outlet />
         </div>
       </main>
-      
 
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 lg:px-6 py-2 lg:py-3 safe-area-padding-bottom shadow-lg lg:shadow-xl">
         <div className="flex justify-around lg:justify-center lg:space-x-8 items-center max-w-md lg:max-w-4xl mx-auto">
           {/* Home */}
-          <Link to={'/home/main'} className="flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg text-green-600 bg-green-50">
+          <Link
+            to={"/home/main"}
+            className="flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg text-green-600 bg-green-50"
+          >
             <Home className="w-5 h-5 lg:w-6 lg:h-6" />
             <span className="text-xs lg:text-sm font-medium">Home</span>
           </Link>
 
           {/* History */}
-          <Link to={'/home/history'} className="flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-50">
+          <Link
+            to={"/home/history"}
+            className="flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+          >
             <History className="w-5 h-5 lg:w-6 lg:h-6" />
             <span className="text-xs lg:text-sm font-medium">History</span>
           </Link>
 
           {/* Add */}
-          <Link to={'/home/add-transaction'} className="bg-gradient-to-r from-green-500 to-blue-500 text-white p-3 rounded-full hover:shadow-lg transform hover:scale-105">
+          <Link
+            to={"/home/add-transaction"}
+            className="bg-gradient-to-r from-green-500 to-blue-500 text-white p-3 rounded-full hover:shadow-lg transform hover:scale-105"
+          >
             <Plus className="w-6 h-6" />
           </Link>
 
           {/* Analytics */}
-          <Link to={"/home/analytics"} className="flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-50">
+          <Link
+            to={"/home/analytics"}
+            className="flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+          >
             <BarChart3 className="w-5 h-5 lg:w-6 lg:h-6" />
             <span className="text-xs lg:text-sm font-medium">Analytics</span>
           </Link>

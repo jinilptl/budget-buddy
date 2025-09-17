@@ -37,6 +37,8 @@ export default function Login() {
       let data = response.data.data;
 
       let token = data.token;
+      console.log("logion data", data);
+      
       setUser(data.user);
       localStorage.setItem("token", JSON.stringify(token));
       navigate("/home");

@@ -3,6 +3,7 @@ import { TransactionList } from "../components/TransactionList";
 import { TransactionContext } from "../context/TransactionContext";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import { AuthContext } from "../context/AuthContext";
 
 pdfMake.vfs = pdfFonts.pdfMake ? pdfFonts.pdfMake.vfs : pdfFonts.vfs;
 
@@ -22,7 +23,9 @@ const months = [
 ];
 
 const History = () => {
-  const { Transactions ,setTransactions,deleteTransaction} = useContext(TransactionContext);
+  const { Transactions ,setTransactions,deleteTransaction,} = useContext(TransactionContext);
+
+  const { user } = useContext(AuthContext)
   const transactions = Transactions || [];
 
   const [selectedMonth, setSelectedMonth] = useState("");
@@ -30,6 +33,11 @@ const History = () => {
   const [selectedWeek, setSelectedWeek] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  console.log("username", user);
+  
+  const userName = user?.name || "User";
+
+  // Helper to get week of month'
 
   const getWeekOfMonth = (date) => {
     const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -125,6 +133,7 @@ const History = () => {
     const docDefinition = {
       content: [
         { text: "Transaction Report", style: "header" },
+        { text: `Owner : ${userName[0].toUpperCase() + userName.slice(1).toLowerCase()}`, style: "subheader" },
 
         { columns: firstLine, margin: [0, 0, 0, 5] },
         { columns: secondLine, margin: [0, 0, 0, 10] },
@@ -229,7 +238,7 @@ const History = () => {
       defaultStyle: { fonts: "Helvetica" },
     };
 
-    pdfMake.createPdf(docDefinition).download("transactions.pdf");
+    pdfMake.createPdf(docDefinition).download(`${userName[0].toUpperCase() + userName.slice(1).toLowerCase()} - transactions.pdf`);
   };
 
 

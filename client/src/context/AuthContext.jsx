@@ -4,14 +4,16 @@ import { registerApi, loginApi } from "../services/authServices";
 export const AuthContext = createContext();
 
 const AuthContextProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user"))? JSON.parse(localStorage.getItem("user")): null);
 
   // for debugging
   useEffect(() => {
     if (user) {
       console.log("✅ User updated:", user);
+      localStorage.setItem("user", JSON.stringify(user));
     }
-
+ 
     let token = localStorage.getItem("token");
   }, [user]);
 
@@ -35,6 +37,8 @@ const AuthContextProvider = ({ children }) => {
       throw error;
     }
   }
+ 
+  
 
   const AuthValue = { user, setUser, registerUser, loginUser };
 

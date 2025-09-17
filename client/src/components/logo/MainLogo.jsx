@@ -1,10 +1,16 @@
 import React from 'react'
 
-const MainLogo = ({ size = "default" }) => {
+const MainLogo = ({ size = "default", ballSize = "default" }) => {
   const sizeClasses = {
-    small: "w-14 h-14",
+    small: "w-12 h-12",
     default: "w-20 h-20",
     large: "w-24 h-24"
+  };
+
+  const ballClasses = {
+    small: "w-3.5 h-3.5",
+    default: "w-4 h-4",
+    large: "w-5 h-5"
   };
 
   const textSizeClasses = {
@@ -27,9 +33,9 @@ const MainLogo = ({ size = "default" }) => {
         
         {/* Floating Coins Animation */}
         <div className="absolute -top-3 -right-3">
-          <div className="w-4 h-4 bg-amber-400 rounded-full absolute animate-bounce shadow-sm" style={{ animationDelay: '0s' }}></div>
-          <div className="w-4 h-4 bg-amber-400 rounded-full absolute top-1 right-2 animate-bounce shadow-sm" style={{ animationDelay: '0.2s' }}></div>
-          <div className="w-4 h-4 bg-amber-400 rounded-full absolute -top-1 right-4 animate-bounce shadow-sm" style={{ animationDelay: '0.4s' }}></div>
+          <div className={`${ballClasses[ballSize]} bg-amber-400 rounded-full absolute animate-bounce shadow-sm`} style={{ animationDelay: '0s' }}></div>
+          <div className={`${ballClasses[ballSize]} bg-amber-400 rounded-full absolute top-1 right-2 animate-bounce shadow-sm`} style={{ animationDelay: '0.2s' }}></div>
+          <div className={`${ballClasses[ballSize]} bg-amber-400 rounded-full absolute -top-1 right-4 animate-bounce shadow-sm`} style={{ animationDelay: '0.4s' }}></div>
         </div>
       </div>
       
