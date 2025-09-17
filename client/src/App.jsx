@@ -10,6 +10,7 @@ import { MainApp } from "./pages/OutletPage";
 import { Dashboard } from "./pages/Dashboard";
 import History from "./pages/History";
 import Analytics from "./pages/Analytics/Analytics";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="add-transaction" element={<AddTransaction isEdit={false} />} />
           <Route path="edit-transaction/:id" element={<AddTransaction isEdit={true}/>} />
           <Route path="history" element={<History/>} />
+          <Route path="profile" element={<ProfilePage  />} />
           {/* <Route path="analytics" element={<Analytics/>} /> */}
         </Route>
 

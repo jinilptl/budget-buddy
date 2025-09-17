@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Home, History, Plus, BarChart3, User, Bell } from "lucide-react";
 import { Link, Outlet } from "react-router-dom";
 import NavbarLogo from "../components/logo/Navbaarlogo";
@@ -6,6 +6,7 @@ import MainLogo from "../components/logo/MainLogo";
 import Avatar from "../components/Avatar";
 
 export function MainApp() {
+  const [isActive,setIsActive] = useState("home");
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col relative">
       {/* Top Header */}
@@ -30,7 +31,12 @@ export function MainApp() {
           {/* Home */}
           <Link
             to={"/home/main"}
-            className="flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg text-green-600 bg-green-50"
+            onClick={() => setIsActive("home")}
+            className={`flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg ${
+              isActive === "home"
+                ? "text-green-600 bg-green-50"
+                : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+            }`}
           >
             <Home className="w-5 h-5 lg:w-6 lg:h-6" />
             <span className="text-xs lg:text-sm font-medium">Home</span>
@@ -39,7 +45,12 @@ export function MainApp() {
           {/* History */}
           <Link
             to={"/home/history"}
-            className="flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+            onClick={() => setIsActive("history")}
+            className={`flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg ${
+              isActive === "history"
+                ? "text-green-600 bg-green-50"
+                : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+            }`}
           >
             <History className="w-5 h-5 lg:w-6 lg:h-6" />
             <span className="text-xs lg:text-sm font-medium">History</span>
@@ -56,14 +67,24 @@ export function MainApp() {
           {/* Analytics */}
           <Link
             to={"/home/analytics"}
-            className="flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+            onClick={() => setIsActive("analytics")}
+            className={`flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg ${
+              isActive === "analytics"
+                ? "text-green-600 bg-green-50"
+                : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+            }`}
           >
             <BarChart3 className="w-5 h-5 lg:w-6 lg:h-6" />
             <span className="text-xs lg:text-sm font-medium">Analytics</span>
           </Link>
 
           {/* Profile */}
-          <Link className="flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-50">
+          <Link to={"/home/profile"} onClick={() => setIsActive("profile")}
+          className={`flex flex-col items-center space-y-1 py-2 px-3 lg:px-4 rounded-lg ${
+            isActive === "profile"
+              ? "text-green-600 bg-green-50"
+              : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+          }`}>
             <User className="w-5 h-5 lg:w-6 lg:h-6" />
             <span className="text-xs lg:text-sm font-medium">Profile</span>
           </Link>
