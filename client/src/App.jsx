@@ -55,7 +55,3 @@ function App() {
 
 export default App;
 
-// this is a budget overview component only show animated slider..this is a upcoming feature
-{
-  /* <BudgetOverview/> */
-}

@@ -334,11 +334,18 @@ const getTransactionSummary = AsyncHandler(async (req, res) => {
 
 const getAllRecentTransactions = AsyncHandler(async (req, res) => {
   const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
+   const userId = req.user.id;
+  // console.log("userId is", userId);
+
+  if (!userId) {
+    throw new ApiError(400, "User not authorized");
+  }
   
   console.log("recent calll");
   
 
   const recentTransactions = await TransactionModel.find({
+    userId: userId,
     createdAt: { $gte: last24Hours },
   }).sort({ createdAt: -1 });
 

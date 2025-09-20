@@ -5,15 +5,65 @@ import { TransactionList } from "../components/TransactionList.jsx";
 import { Link } from "react-router-dom";
 import { TransactionContext } from "../context/TransactionContext.jsx";
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext.jsx";
 
 export function Dashboard() {
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
   const [balance, setBalance] = useState(0);
   const [latestTransactions, setLatestTransactions] = useState([]);
+  const [motivation, setMotivation] = useState("");
 
-  const { deleteTransaction, setTransactions, getSummery,Transactions } =
+  const { deleteTransaction, setTransactions, getSummery, Transactions } =
     useContext(TransactionContext);
+
+  const { user } = useContext(AuthContext);
+    const [time, setTime] = useState(new Date());
+
+  // ✅ Motivation Tips
+  const tips = [
+    "💡 Track every small expense, it adds up over time!",
+    "🔥 You're doing great! Keep your savings consistent.",
+    "🎯 Save at least 20% of your income every month.",
+    "📊 Reviewing expenses weekly keeps you financially aware.",
+    "🚀 Small steps lead to big financial goals!",
+  ];
+
+    useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer); // cleanup
+  }, []);
+
+  // ✅ Greeting function
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 18) return "Good Afternoon";
+    return "Good Evening";
+  };
+
+  // ✅ Format today's date
+  const formatDate = (date) => {
+    return date.toLocaleDateString("en-US", {
+      day: "numeric", month: "long", year: "numeric" 
+    });
+  };
+
+  const showDay = (date) => {
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+    });
+  };
+
+   const formatTime = (date) =>
+    date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
 
   // ✅ Fetch latest 24h transactions
   async function fetchLatestTransactions() {
@@ -73,15 +123,28 @@ export function Dashboard() {
   useEffect(() => {
     fetchSummary();
     fetchLatestTransactions();
+    // Set random tip
+    setMotivation(tips[Math.floor(Math.random() * tips.length)]);
   }, [Transactions]);
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
-          <p className="text-gray-600">Track your income and expenses</p>
+        {/* ✅ Greeting Box */}
+          <div className="mb-8 p-6 rounded-2xl md:w-[50%] bg-gradient-to-r from-emerald-500 to-blue-500 text-white shadow-lg">
+      <h2 className="text-2xl font-bold">
+        {getGreeting()},{" "}
+        <span className="capitalize">{user?.name || "User"} 👋</span>
+      </h2>
+
+      <p className="text-lg font-semibold">{showDay(time)}</p>
+      <p className="text-sm opacity-90">{formatDate(time)}</p>
+      <p className="text-sm opacity-80 mt-1">{formatTime(time)}</p>
+    </div>
+
+        {/* ✅ Motivation Tip */}
+        <div className="mb-8 p-4 rounded-lg bg-yellow-100 text-yellow-800 shadow-sm text-center font-medium">
+          {motivation}
         </div>
 
         {/* Summary Cards */}
@@ -110,7 +173,7 @@ export function Dashboard() {
           </Link>
         </div>
 
-        {/* ✅ Transaction List */}
+        {/* Transaction List */}
         <TransactionList
           transactions={latestTransactions}
           onDeleteTransaction={handleDeleteTransaction}
